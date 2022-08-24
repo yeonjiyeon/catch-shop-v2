@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+<link rel="stylesheet" href="/assets/css/sales.css" >
+<!-- datepicker css -->
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />
+<body>
+    <!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+
+    <!-- header -->
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <!-- search area -->
+    <div class="search-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                    <div class="search-bar">
+                        <div class="search-bar-tablecell">
+                            <h3>Search For:</h3>
+                            <input type="text" placeholder="Keywords">
+                            <button type="submit">Search <i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end search arewa -->
+
+    <!-- breadcrumb-section -->
+    <div class="breadcrumb-section breadcrumb-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 text-center">
+                    <div class="breadcrumb-text">
+                        <p>Catch Shop</p>
+                        <h1>Sales</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end breadcrumb section -->
+
+    <div class="single-product mt-150 mb-150">
+        <div class="container">
+            <form method="GET">
+                <div class="form-group">
+                    <label for="searchStartDate">시작 날짜</label>
+                    <input type="text" id="searchStartDate" th:name="searchStartDate" readonly="readonly">
+
+                    <label for="searchEndDate">종료 날짜</label>
+                    <input type="text" id="searchEndDate" th:name="searchEndDate" readonly="readonly">
+
+                    <button type="submit" onclick="searchSales()">매출 조회</button>
+                    <button type="submit" onclick="searchAnnualSales()">연매출 조회</button>
+                    <button type="submit" onclick="searchMonthlySales()">월매출 조회</button>
+                </div><br><br><br>
+
+                <!-- 총 매출액 -->
+                <div id="totalSales">
+                    <h5>총 매출액&nbsp;&nbsp;<strong>[[${totalSalesPrice}]]&nbsp;원</strong></h5>
+                </div><br><br>
+
+                <!-- 매출 상세 -->
+                <div id="salesTable">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>상품명</th>
+                            <th>수량</th>
+                            <th>가격</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="sales : ${salesList}">
+                            <td th:text="${sales.product.name}"></td>
+                            <td th:text="${sales.orderCount}"></td>
+                            <td th:text="${sales.totalPrice} + '원'"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div th:replace="fragments/footer :: footer"/>
+
+    <!-- jquery -->
+    <script src="/assets/js/jquery-1.11.3.min.js"></script>
+    <!-- bootstrap -->
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <!-- count down -->
+    <script src="/assets/js/jquery.countdown.js"></script>
+    <!-- isotope -->
+    <script src="/assets/js/jquery.isotope-3.0.6.min.js"></script>
+    <!-- waypoints -->
+    <script src="/assets/js/waypoints.js"></script>
+    <!-- owl carousel -->
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <!-- magnific popup -->
+    <script src="/assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- mean menu -->
+    <script src="/assets/js/jquery.meanmenu.min.js"></script>
+    <!-- sticker js -->
+    <script src="/assets/js/sticker.js"></script>
+    <!-- main js -->
+    <script src="/assets/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <!-- datepicker js -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // 시작일 선택 달력
+            $("#searchStartDate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                nextText: '다음 달',
+                prevText: '이전 달',
+                dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+                dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+                monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+                monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+                dateFormat: "yy-mm-dd",
+                maxDate: 0, // 선택할 수 있는 최소 날짜, (0: 오늘 이후 날짜 선택 불가)
+                onClose: function(selectedDate) {
+                    $("#searchEndDate").datepicker("option", "minDate", selectedDate);
+                }
+            });
+
+            // 종료일 선택 달력
+            $("#searchEndDate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                nextText: '다음 달',
+                prevText: '이전 달',
+                dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+                dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+                monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+                monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+                dateFormat: "yy-mm-dd",
+                maxDate: 0, // 선택할 수 있는 최대 날짜, (0: 오늘 이후 날짜 선택 불가)
+                onClose: function(selectedDate) {
+                    $("#searchStartDate").datepicker("option", "maxDate", selectedDate);
+                }
+            });
+        })
+
+        function searchSales() {
+            $.ajax({
+                url: "/sales",
+                type: "GET",
+                data: {
+                    searchStartDate: document.getElementById("searchStartDate").value,
+                    searchEndDate: document.getElementById("searchEndDate").value
+                }
+            })
+                .done(function (fragment) {
+                    $('#salesTable').replaceWith(fragment);
+                    $('#totalSales').replaceWith(fragment);
+                });
+        }
+
+        function searchAnnualSales() {
+            let today = new Date()
+            let year = today.getFullYear().toString()
+            document.getElementById("searchStartDate").value = year+"-01-01"
+            document.getElementById("searchEndDate").value = year+"-12-31"
+
+            // 서버 통신
+            searchSales()
+        }
+
+        function searchMonthlySales() {
+            let today = new Date()
+            let year = today.getFullYear()
+            let month = today.getMonth() + 1
+            let length = new Date(year, month, 0).getDate() // 그 달의 날짜 수
+
+            if (month < 10) {
+                month = "0" + month.toString()
+            }
+            else {
+                month = month.toString()
+            }
+
+            document.getElementById("searchStartDate").value = year + "-" + month + "-01"
+            document.getElementById("searchEndDate").value = year + "-" + month + "-" + length.toString()
+
+            // 서버 통신
+            searchSales()
+        }
+    </script>
+</body>
+</html>

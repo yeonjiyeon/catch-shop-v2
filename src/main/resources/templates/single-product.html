@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<style>
+	/*tab css*/
+	.tab{float:left; width:900px; }
+	.tabnav{font-size:0; width:900px; border:1px solid #ddd;}
+	.tabnav li{display: inline-block;  height:46px; text-align:center; border-right:1px solid #ddd;}
+	.tabnav li a:before{content:""; position:absolute; left:0; top:0px; width:100%; height:3px; }
+	.tabnav li a.active:before{background:#7ea21e;}
+	.tabnav li a.active{border-bottom:1px solid #fff;}
+	.tabnav li a{ position:relative; display:block; background: #f8f8f8; color: #000; padding:0 30px; line-height:46px; text-decoration:none; font-size:16px;}
+	.tabnav li a:hover,
+	.tabnav li a.active{background:#fff; color:#7ea21e; }
+	.tabcontent{padding: 20px; height:244px; border:1px solid #ddd; border-top:none;}
+
+</style>
+<body>
+
+<!--PreLoader-->
+<div class="loader">
+  <div class="loader-inner">
+    <div class="circle"></div>
+  </div>
+</div>
+<!--PreLoader Ends-->
+
+<!-- header -->
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+<!-- end header -->
+
+
+<!-- search area -->
+<div class="search-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <span class="close-btn"><i class="fas fa-window-close"></i></span>
+        <div class="search-bar">
+          <div class="search-bar-tablecell">
+            <h3>Search For:</h3>
+            <input type="text" placeholder="Keywords">
+            <button type="submit">Search <i class="fas fa-search"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end search arewa -->
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <div class="breadcrumb-text">
+          <p>Catch Shop</p>
+          <h1>Single Product</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- single product -->
+<div class="single-product mt-150 mb-150">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-5">
+        <div class="single-product-img">
+          <img th:src="${dto.productImg}" alt="">
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="single-product-content">
+          <h3>[[${dto.name}]]</h3>
+          <p class="single-product-pricing">[[${dto.price}]]</p>
+          <p>[[${dto.text}]]</p>
+          <div class="single-product-form">
+            <form th:action="@{'/carts/' + ${dto.id}}" th:method="post">
+              <input type="number" th:name="count" th:value="1" min="1">&nbsp;&nbsp;
+              <button type="submit" class="btn-lg" style="border: none; color: white; background-color: #F28123FF">
+                <i class="fas fa-shopping-cart"></i>&nbsp;장바구니 담기
+              </button>
+            </form>
+            <p>[[${dto.avg}]]</p>
+
+            <p><strong>Categories: </strong>[[${dto.category.name}]]</p>
+          </div>
+          <h4>Share:</h4>
+          <ul class="product-share">
+            <li><a href=""><i class="fab fa-facebook-f"></i></a></li>
+            <li><a href=""><i class="fab fa-twitter"></i></a></li>
+            <li><a href=""><i class="fab fa-google-plus-g"></i></a></li>
+            <li><a href=""><i class="fab fa-linkedin"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end single product -->
+
+<!-- 모달창 추가 -->
+<div class="reviewModal modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Movie Review</h5>
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Star <span class="grade"></span></label>
+          <div class='starrr'></div>
+        </div>
+        <div class="form-group">
+          <label>Review Text</label>
+          <input type="text" class="form-control" name="contents" placeholder="상품 리뷰 작성">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary reviewSaveBtn">Save changes</button>
+        <button type="button" class="btn btn-warning modifyBtn">Modify</button>
+        <button type="button" class="btn btn-danger removeBtn">Remove</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="imageModal modal " tabindex="-2" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Picture</h5>
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/jquery.js"></script>
+<script src="assets/js/starrr.js"></script>
+<link href="assets/css/starrr.css" rel="stylesheet">
+<link rel="stylesheet"
+      href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
+<script>
+  $(document).ready(function(e) {
+
+                var star = 0;
+                var pId = [[${dto.id}]];
+
+                $('.starrr').starrr({
+                    rating: star,
+                    change: function(e, value){
+                        if (value) {
+                            console.log(value);
+                            star = value;
+                        }
+                    }
+                });
+
+
+                var reviewModal = $(".reviewModal");
+                var inputContents = $('input[name="contents"]');
+
+
+                $(".addReviewBtn").click(function () {
+
+                    inputContents.val("");
+
+                    $(".removeBtn ,  .modifyBtn").hide();
+                    $(".reviewSaveBtn").show();
+
+                    reviewModal.modal('show');
+                });
+
+
+                 $('.reviewSaveBtn').click(function() {
+
+                    var data = {pId:pId, star:star, contents:inputContents.val()};
+
+                    console.log(data);
+
+                    $.ajax({
+                        url:'/products/'+pId +'/reviews',
+                        type:"POST",
+                        data:JSON.stringify(data),
+                        contentType:"application/json; charset=utf-8",
+                        dataType:"text",
+                        success: function(result){
+                            console.log("result: " + result);
+
+                            self.location.reload();
+
+                        }
+                    })
+                    reviewModal.modal('hide');
+
+                });
+
+                //페이지가 열리면 바로 리뷰 데이터들을 가져와서 사용한다.
+                function getProductReviews() {
+
+                    function formatTime(str){
+                        var date = new Date(str);
+
+                        return date.getFullYear() + '-' +
+                            (date.getMonth() + 1) + '-' +
+                            date.getDate() + ' ' +
+                            date.getHours() + ':' +
+                            date.getMinutes();
+                    }
+
+                    $.getJSON("/products/"+ pId +"/reviews", function(arr){
+                        var str ="";
+
+                        $.each(arr, function(idx, review){
+
+                            console.log(review);
+                            str += '    <div class="card-body" data-id='+review.id+' data-loginId='+review.loginId+'>';
+                            str += '    <h5 class="card-title">'+review.contents+' <span>'+ review.star+'</span></h5>';
+                            str += '    <h6 class="card-subtitle mb-2 text-muted">'+review.name+'</h6>';
+                            str += '    <p class="card-text">'+ formatTime(review.regDate) +'</p>';
+                            str += '    </div>';
+
+                        });
+
+                        $(".reviewList").html(str);
+                    });
+                }
+
+                getProductReviews();
+
+
+
+                 //modify reveiw
+
+                var id;
+
+                $(".reviewList").on("click", ".card-body", function() {
+										//console.log("============");
+                    $(".reviewSaveBtn").hide();
+                    $(".removeBtn , .modifyBtn").show();
+
+
+                    var targetReview = $(this);
+
+                    id = targetReview.data("id");
+                    console.log("id: "+ id);
+
+                    inputContents.val(targetReview.find('.card-title').clone().children().remove().end().text());
+
+                    var star = targetReview.find('.card-title span').html();
+                    $(".starrr a:nth-child("+star+")").trigger('click');
+
+                    $('.reviewModal').modal('show');
+                });
+
+
+                $(".modifyBtn").on("click", function(){
+
+                    var data = {id: id, pId:pId, star:star, contents:inputContents.val()};
+
+                    console.log(data);
+
+                    $.ajax({
+                        url:'/products/'+pId +'/reviews/'+ id,
+                        type:"PUT",
+                        data:JSON.stringify(data),
+                        contentType:"application/json; charset=utf-8",
+                        dataType:"text",
+                        success: function(result){
+
+                            console.log("result: " + result);
+
+                            self.location.reload();
+
+                        }
+                    })
+                    reviewModal.modal('hide');
+                });
+
+                $(".removeBtn").on("click", function(){
+
+                    var data = {id: id};
+
+                    console.log(data);
+
+                    $.ajax({
+                        url:'/products/'+pId +'/reviews/'+ id ,
+                        type:"DELETE",
+                        contentType:"application/json; charset=utf-8",
+                        dataType:"text",
+                        success: function(result){
+
+                            console.log("result: " + result);
+
+                            self.location.reload();
+
+                        }
+                    })
+                    reviewModal.modal('hide');
+                });
+            });
+
+
+
+</script>
+
+
+<!-- more products -->
+	<div class="more-products mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="section-title">	
+						<h3><span class="orange-text">Related</span> Products</h3>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4 col-md-6 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="single-product.html"><img src="assets/img/products/product-img-1.jpg" alt=""></a>
+						</div>
+						<h3>Strawberry</h3>
+						<p class="product-price"><span>Per Kg</span> 85$ </p>
+						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="single-product.html"><img src="assets/img/products/product-img-2.jpg" alt=""></a>
+						</div>
+						<h3>Berry</h3>
+						<p class="product-price"><span>Per Kg</span> 70$ </p>
+						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6 offset-lg-0 offset-md-3 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="single-product.html"><img src="assets/img/products/product-img-3.jpg" alt=""></a>
+						</div>
+						<h3>Lemon</h3>
+						<p class="product-price"><span>Per Kg</span> 35$ </p>
+						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+			</div>
+
+			<!--게시판 모음 -->
+			<div class="row">
+				<div class="tab">
+					<ul class="tabnav">
+						<li><a href="#goods-review">후기 [[${dto.reviewCnt}]] </a></li>
+						<li><a href="#goods-question">문의</a></li>
+					</ul>
+					<div class="tabcontent">
+						<div class="goods-review" id="goods-review">
+							<div class="container">
+								<div class="row">
+									<div class="col-lg-8 col-md-12">
+										<button type="button" class="btn btn-info addReviewBtn"
+														style="text-align: center; float: right;">
+											Review Register
+										</button>
+										<!--table class="cart-table">
+											<thead>
+											<tr>
+												<th>내용</th>
+												<th>별점</th>
+												<th>작성자</th>
+												<th>작성 날짜</th>
+											</tr>
+											</thead>
+											<tbody class="list-group reviewList">
+
+											</tbody>
+										</table-->
+										<div class="list-group reviewList">
+
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+                        <div class="goods-question" id="goods-question">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-12">
+                                        <!-- 문의 등록 페이지 이동 버튼 -->
+                                        <div class="cart-buttons" style="text-align: center; float: right;">
+                                            <a th:href="@{/products/{id}/questions (id=${dto.id})}" class="boxed-btn btn-lg black">+</a>
+                                        </div><br><br>
+
+                                        <div>
+                                            <table class="cart-table">
+                                                <thead>
+                                                <tr>
+                                                    <th>번호</th>
+                                                    <th>카테고리</th>
+                                                    <th>작성자</th>
+                                                    <th>내용</th>
+                                                    <th>작성 날짜</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody th:each="question : ${questions}">
+                                                <tr>
+
+                                                    <!-- 비밀글인 경우 비밀번호 입력 팝업 띄우기, 관리자는 해당 없음 -->
+
+                                                    <td th:text="${question.id}" th:onclick="|location.href='@{/questions/{id} (id=${question.id})}'|"></td>
+
+
+                                                    <td th:text="${question.category}"></td>
+                                                    <td th:text="${question.user.loginId}"></td>
+                                                    <td th:text="${question.content}"></td>
+                                                    <td th:text="${#temporals.format(question.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                                </tr>
+
+                                                <tr th:each="answer : ${question.answerList}">
+                                                    <td th:text="|Re: ${answer.user.role}|" th:onclick="|location.href='@{/questions/{id} (id=${question.id})}'|"></td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end more products -->
+
+
+<!-- footer -->
+<div th:replace="fragments/footer :: footer"/>
+
+<!-- jquery -->
+
+<!-- bootstrap -->
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="assets/js/main.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.tabcontent > div').hide();
+        $('.tabnav a').click(function () {
+            $('.tabcontent > div').hide().filter(this.hash).fadeIn();
+            $('.tabnav a').removeClass('active');
+            $(this).addClass('active');
+            return false;
+        }).filter(':eq(0)').click();
+    });
+
+    function alertPopup(password) {
+        let prompt = prompt('비밀번호를 입력하세요');
+        let inputPassword = Number(prompt);
+
+        if (String(inputPassword) != password) {
+            alert('비밀번호가 틀렸습니다!');
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+
+<body>
+	
+	<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+
+	<!-- header -->
+	<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+	<!-- end header -->
+
+	<!-- search area -->
+	<div th:replace="fragments/searchProduct :: searchProduct"/>
+	<!-- end search area -->
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>Shop</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- products -->
+	<div class="product-section mt-150 mb-150">
+		<div class="container">
+
+			<div class="row">
+                <div class="col-md-12">
+                    <div class="product-filters">
+                        <ul>
+                            <li class="active" data-filter="*">All</li>
+                            <li data-filter=".strawberry">Strawberry</li>
+                            <li data-filter=".berry">Berry</li>
+                            <li data-filter=".lemon">Lemon</li>
+							<li data-filter=".kiwi">Kiwi</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+			<div class="row product-lists">
+				<!-- div th:each="dto : ${result.dtoList}"  class="col-lg-4 col-md-6 text-center strawberry"-->
+				<div th:each="dto : ${result.dtoList}"  class="col-lg-4 col-md-6 text-center" th:classappend=" ${dto.category.name}">
+
+					<div class="single-product-item">
+						<div class="product-image">
+							<a th:href="@{/single-product(id = ${dto.id}, page = ${result.page})}"><img th:src="${dto.productImg}" alt=""></a>
+						</div>
+						<!--h3>[[${dto.category.name}]]</h3-->
+						<h3>[[${dto.name}]]</h3>
+						<p class="product-price"> [[${dto.price}]] </p>
+						<form th:action="@{'/carts/' + ${dto.id}}"th:method="post">
+							<button type="submit" class="btn-lg" style="border: none; color: white; background-color: #F28123FF">
+								<i class="fas fa-shopping-cart"></i>&nbsp;장바구니 담기
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<div class="pagination-wrap">
+						<ul class="pagination h-100 justify-content-center align-items-center">
+
+							<li class="page-item " th:if="${result.prev}">
+								<a class="page-link" th:href="@{/products(page= ${result.start -1})}" tabindex="-1">Previous</a>
+							</li>
+
+							<li th:class=" 'page-item ' + ${result.page == page?'active':''} " th:each="page: ${result.pageList}">
+								<a class="page-link" th:href="@{/products(page = ${page})}">
+									[[${page}]]
+								</a>
+							</li>
+
+							<li class="page-item" th:if="${result.next}">
+								<a class="page-link" th:href="@{/guestbook/list(page= ${result.end + 1})}">Next</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end products -->
+
+
+
+
+
+	<!-- footer -->
+	<div th:replace="fragments/footer :: footer"/>
+
+	<!-- jquery -->
+	<script src="assets/js/jquery-1.11.3.min.js"></script>
+	<!-- bootstrap -->
+	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+	<!-- count down -->
+	<script src="assets/js/jquery.countdown.js"></script>
+	<!-- isotope -->
+	<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+	<!-- waypoints -->
+	<script src="assets/js/waypoints.js"></script>
+	<!-- owl carousel -->
+	<script src="assets/js/owl.carousel.min.js"></script>
+	<!-- magnific popup -->
+	<script src="assets/js/jquery.magnific-popup.min.js"></script>
+	<!-- mean menu -->
+	<script src="assets/js/jquery.meanmenu.min.js"></script>
+	<!-- sticker js -->
+	<script src="assets/js/sticker.js"></script>
+	<!-- main js -->
+	<script src="assets/js/main.js"></script>
+
+</body>
+</html>

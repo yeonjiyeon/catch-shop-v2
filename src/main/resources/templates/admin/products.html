@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+
+<body>
+<!--PreLoader-->
+<div class="loader">
+    <div class="loader-inner">
+        <div class="circle"></div>
+    </div>
+</div>
+<!--PreLoader Ends-->
+
+<!-- header -->
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<!-- search area -->
+<div class="search-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                <div class="search-bar">
+                    <div class="search-bar-tablecell">
+                        <h3>Search For:</h3>
+                        <input type="text" placeholder="Keywords">
+                        <button type="submit">Search <i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end search arewa -->
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Catch Shop</p>
+                    <h1>상품</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+
+<!-- single product -->
+<div class="single-product mt-150 mb-150">
+    <div class="container">
+        <!-- 상품 등록 페이지 이동 버튼 -->
+        <div class="cart-buttons" style="text-align: center; float: right;">
+            <a href="/products/admin" class="boxed-btn btn-lg black">+</a>
+        </div><br><br><br><br>
+
+        <!-- 전체 상품 조회 시작  -->
+        <div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>상품명</th>
+                    <th>이미지</th>
+                    <th>가격</th>
+                    <th>수량</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${paging}">
+                    <td th:text="${product.name}"></td>
+                    <td><img th:src="${product.productImgPath}" style="width:100px; height:100px;"></td>
+                    <td th:text="${product.price}"></td>
+                    <td th:text="${product.stock}"></td>
+                    <td>
+                        <a href="#" th:href="@{/products/{id}/admin/edit (id=${product.id})}" class="btn btn-primary" role="button">수정</a>
+                    </td>
+                    <td>
+                        <form th:action="@{/products/{id}/admin (id=${product.id})}" method="post">
+                            <input type="hidden" name="_method" value="delete">
+                            <button type="submit" class="btn btn-primary">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table><br>
+        </div>
+        <!-- 전체 상품 조회 끝 -->
+
+        <!-- 페이징 처리 시작 -->
+        <div th:if="${!paging.isEmpty()}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${paging.number-1}|}">
+                        <span>prev</span>
+                    </a>
+                </li>
+                <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                    th:classappend="${page == paging.number} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+                </li>
+                <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                        <span>next</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- 페이징 처리 끝 -->
+    </div>
+</div>
+<!-- end single product -->
+
+<!-- footer -->
+<div th:replace="fragments/footer :: footer"/>
+
+<!-- jquery -->
+<script src="/assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="/assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="/assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="/assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="/assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="/assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="/assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="/assets/js/main.js"></script>
+<script>
+    // // 삭제 재확인 메시지
+    // $(function(){
+    //     $('#btn-remove').click(function(){
+    //         if (confirm("상품을 삭제하시겠습니까")){
+    //             self.location.href = "@{/products/admin/{id} (id=${product.id})}";
+    //         }
+    //     });
+    // });
+</script>
+</body>
+</html>

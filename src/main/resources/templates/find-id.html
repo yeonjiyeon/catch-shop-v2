@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+
+<!--PreLoader-->
+<div class="loader">
+	<div class="loader-inner">
+		<div class="circle"></div>
+	</div>
+</div>
+<!--PreLoader Ends-->
+
+<!-- header -->
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<div class="search-area">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<span class="close-btn"><i class="fas fa-window-close"></i></span>
+				<div class="search-bar">
+					<div class="search-bar-tablecell">
+						<h3>Search For:</h3>
+						<input type="text" placeholder="Keywords">
+						<button type="submit">Search <i class="fas fa-search"></i></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="hero-area hero-bg">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-9 offset-lg-2 text-center">
+				<div class="hero-text">
+					<div class="hero-text-tablecell">
+						<p class="subtitle">Catch Shop</p>
+						<!-- 아이디찾기 폼 시작 -->
+						<h3 style="text-align: center">Find Id</h3><br>
+						<form action="/find-id" th:action th:object="${findIdDto}" method="post">
+
+							<h6 th:if="${userId != null}" style="text-align: center">회원님의 아이디는
+								<div th:text="${userId}" style="text-align: center">기본 메시지</div>입니다.</h6><br>
+
+							<div th:if="${#fields.hasGlobalErrors()}">
+								<p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}"
+								   style="text-align: center">전체 오류 메시지</p>
+							</div>
+
+							<!-- 이름 -->
+							<div style="width:300px;margin:0 auto;">
+								<label for="name">이름</label>
+								<input type="text" id="name" th:field="*{name}" class="form-control"
+									   style="border-radius:3px;border:none;margin-bottom:10px;width:100%;height:35px;"
+									   placeholder="이름을 입력하세요"
+									   th:errorclass="field-error">
+								<div class="field-error" th:errors="*{name}" />
+							</div>
+
+							<!-- 연락처 -->
+							<div style="width:300px;margin:0 auto;">
+								<label for="telephone">연락처</label>
+								<input type="text" id="telephone" th:field="*{telephone}" class="form-control"
+									   style="border-radius:3px;border:none;margin-bottom:10px;width:100%;height:35px;"
+									   placeholder="연락처를 입력하세요"
+									   th:errorclass="field-error">
+								<div class="field-error" th:errors="*{telephone}" />
+							</div>
+
+							<!-- 아이디 찾기 버튼 -->
+							<div class="hero-btns" style="margin-top:0px;">
+								<div style="width:300px;margin:0 auto;padding-bottom:10px;">
+									<a style="border-radius: 3px;width:100%;" class="boxed-btn">
+										<button type="submit"
+												style="width:100%; border: hidden; text-align: center; background-color: transparent;"
+												class="btn btn-primary">Find Id</button>
+									</a>
+								</div>
+							</div>
+						</form>
+						<!-- 아이디찾기 폼 끝-->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- footer -->
+<div th:replace="fragments/footer :: footer"/>
+
+<!-- jquery -->
+<script src="/assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="/assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="/assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="/assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="/assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="/assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="/assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="/assets/js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+body {
+    background: #F3F5F7;
+}
+
+
+main {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto 100px;
+}
+
+section {
+    background: #fff;
+    padding: 10px 5px;
+    border: 1px solid #E0E5EE;
+    margin-bottom: 20px;
+}
+
+section.detail {
+    display: none;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.today {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

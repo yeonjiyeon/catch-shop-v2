@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+		function returnBack(){
+			if(document.referrer){
+				history.back();
+			} else {
+				location.href = "/login";
+			}
+		}
+
+		$(document).ready(function() {
+			var result = '<c:out value="${userId}"/>';
+			var msg = '<c:out value="${msg}"/>';
+			checkModal(result);
+
+			function checkModal(result) {
+				if (result == '' || result == null) {
+					$(".modal-body").html(msg == '' || msg == null ? "로그인이 필요한 기능입니다" : msg);
+					$('#myModal').modal({
+						backdrop : "static",
+						keyboard : false
+					});
+					$("#myModal").modal("show");
+					return;
+				}//if
+			}//checkModal
+
+
+		});//ready
+	</script>
+</head>
+<body>
+<!-- 모달창 추가 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">경 고</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="returnBack();">이전 페이지로</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

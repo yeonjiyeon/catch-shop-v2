@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+
+<body>
+<!--PreLoader-->
+<div class="loader">
+    <div class="loader-inner">
+        <div class="circle"></div>
+    </div>
+</div>
+<!--PreLoader Ends-->
+
+<!-- header -->
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<!-- search area -->
+<div class="search-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                <div class="search-bar">
+                    <div class="search-bar-tablecell">
+                        <h3>Search For:</h3>
+                        <input type="text" placeholder="Keywords">
+                        <button type="submit">Search <i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end search arewa -->
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Catch Shop</p>
+                    <h1>카테고리 등록</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- single product -->
+<div class="single-product mt-150 mb-150">
+    <div class="container">
+        <!-- 카테고리 작성 폼 시작 -->
+        <form th:object="${categoryRequestDto}" method="post">
+            <!-- 카테고리명 -->
+            <div style="width:300px;margin:0 auto;">
+                <label for="name">카테고리명</label>
+                <input type="text" th:field="*{name}" id="name"
+                       placeholder="카테고리명을 입력하세요.">
+            </div><br>
+
+            <!-- 부모카테고리 -->
+            <div style="width:300px;margin:0 auto;">
+                <label for="price">부모카테고리</label>
+                <input type="text" th:field="*{parentId}" id="price"
+                       placeholder="부모카테고리를 입력하세요.">
+            </div><br>
+
+
+
+            <!-- 카테고리 등록 버튼 시작 -->
+            <div class="cart-buttons" style="text-align: center;">
+                <div>
+                    <a class="boxed-btn btn-lg black">
+                        <button type="submit"
+                                style="width:100%; border: hidden; text-align: center; background-color: transparent;"
+                                class="btn btn-primary">등록</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+        <!--  작성 폼 끝 -->
+    </div>
+</div>
+<!-- end single product -->
+
+<!-- footer -->
+<div th:replace="fragments/footer :: footer"/>
+
+<!-- jquery -->
+<script src="/assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="/assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="/assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="/assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="/assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="/assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="/assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="/assets/js/main.js"></script>
+
+</body>
+</html>

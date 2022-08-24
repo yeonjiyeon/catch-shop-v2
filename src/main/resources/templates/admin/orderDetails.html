@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+
+<body>
+<!--PreLoader-->
+<div class="loader">
+    <div class="loader-inner">
+        <div class="circle"></div>
+    </div>
+</div>
+<!--PreLoader Ends-->
+
+<!-- header -->
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+
+<!-- search area -->
+<div class="search-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                <div class="search-bar">
+                    <div class="search-bar-tablecell">
+                        <h3>Search For:</h3>
+                        <input type="text" placeholder="Keywords">
+                        <button type="submit">Search <i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end search arewa -->
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Catch Shop</p>
+                    <h1>주문 내역</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- single product -->
+<div class="single-product mt-150 mb-150">
+    <div class="container">
+        <div class="mt-5">
+            <div class="card">
+                <div class="card-header">
+                    <span th:text="${'주문 번호 - ' + orderDetails[0].order.id}" style="font-weight: bold"></span>&nbsp;&nbsp;
+                    <span th:text="${#temporals.format(orderDetails[0].order.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                </div>
+                <div class="card-body">
+                    <h6>[배송 정보]</h6>
+                    <span th:text="${'수령자 이름: ' + orderDetails[0].order.orderName}"></span><br/>
+                    <span th:text="${'수령자 전화번호: ' + orderDetails[0].order.orderTel}"></span><br/>
+                    <span th:text="${'배송 주소: (' + orderDetails[0].order.postcode + ') ' + orderDetails[0].order.address}"></span><br/><br/>
+
+                    <h6>[주문 상품]</h6>
+                    <div class="total-section">
+                        <table class="total-table">
+                            <thead class="total-table-head" th:align="center">
+                            <tr class="table-total-row">
+                                <th class="product-image">상품 이미지</th>
+                                <th class="product-name">상품명</th>
+                                <th class="product-price">가격</th>
+                                <th class="product-quantity">수량</th>
+                                <th class="product-total">구매가</th>
+                            </tr>
+                            </thead>
+                            <tbody class="total-data" th:align="center">
+                            <tr class="total-section" th:each="detail : ${orderDetails}">
+                                <td class="product-image"><a th:href="@{'/single-product?id=' + ${detail.product.id}}"><img th:src="${detail.product.productImg}" alt=""></a></td>
+                                <td class="product-name" th:text="${detail.product.name}"></td>
+                                <td class="product-price" th:text="${detail.orderPrice} + '원'"></td>
+                                <td class="product-quantity" th:text="${detail.orderCount} + '개'"></td>
+                                <td class="product-total" th:text="${detail.orderPrice * detail.orderCount} + '원'"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                <span th:text="${'전체 상품 금액 (' + orderDetails[0].order.totalPrice + '원) + 배송비 (' + orderDetails[0].order.shippingFee + '원) = '
+                + (orderDetails[0].order.totalPrice + orderDetails[0].order.shippingFee)} + '원'"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end single product -->
+
+<!-- footer -->
+<div th:replace="fragments/footer :: footer"/>
+
+<!-- jquery -->
+<script src="/assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="/assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="/assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="/assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="/assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="/assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="/assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="/assets/js/main.js"></script>
+
+<!-- 주소록 api -->
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script src="/resources/js/addressapi.js"></script>
+<script src="/assets/js/user-address.js"></script>
+</body>
+</html>

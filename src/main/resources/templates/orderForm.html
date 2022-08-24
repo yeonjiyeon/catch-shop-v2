@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+
+<body>
+	
+	<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+
+	<!-- header -->
+	<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+	<!-- search area -->
+	<div class="search-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<span class="close-btn"><i class="fas fa-window-close"></i></span>
+					<div class="search-bar">
+						<div class="search-bar-tablecell">
+							<h3>Search For:</h3>
+							<input type="text" placeholder="Keywords">
+							<button type="submit">Search <i class="fas fa-search"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end search arewa -->
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Catch Shop</p>
+						<h1>주문하기</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- check out section -->
+	<div class="checkout-section mt-150 mb-150">
+		<div class="container">
+			<!-- order list -->
+			<div class="row mt-5">
+				<div class="col-12">
+					<div class="total-section">
+						<table class="total-table">
+							<thead class="total-table-head" th:align="center">
+								<tr class="table-total-row">
+									<th class="product-image">상품 이미지</th>
+									<th class="product-name">상품명</th>
+									<th class="product-price">가격</th>
+									<th class="product-quantity">수량</th>
+									<th class="product-total">구매가</th>
+								</tr>
+							</thead>
+							<tbody th:align="center">
+								<tr class="total-data" th:each="cart : ${carts.cartList}">
+									<td class="product-image"><img th:src="${cart.product.productImg}" alt=""></td>
+									<td class="product-name" th:text="${cart.product.name}"></td>
+									<td class="product-price" th:text="${cart.product.price} + '원'"></td>
+									<td class="product-quantity" th:text="${cart.cartCount} + '개'"></td>
+									<td class="product-total" th:text="${cart.totalProductPrice} + '원'"></td>
+								</tr>
+							</tbody>
+							<tbody>
+								<tr class="total-data">
+									<td colspan="3" style="font-weight: bold">전체 상품 금액</td>
+									<td colspan="2" th:text="${carts.totalAllProductPrice} + '원'"></td>
+								</tr>
+								<tr class="total-data">
+									<td colspan="3" style="font-weight: bold">배송비</td>
+									<td colspan="2" th:text="${carts.shippingFee} + '원'"></td>
+								</tr>
+								<tr class="total-data">
+									<td colspan="3" style="font-weight: bold">최종 결제 금액</td>
+									<td colspan="2" id="totalPayPrice" th:text="${carts.totalPayPrice} + '원'"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<!-- order info -->
+			<div class="row mt-5">
+				<div class="col-12">
+					<div class="checkout-accordion-wrap">
+						<div class="accordion" id="accordionExample">
+							<!-- 주문 작성 폼 -->
+							<form action="orders" th:object="${orderForm}" method="post">
+							<div class="card single-accordion">
+								<div class="card-header" id="headingOne">
+								<h5 class="mb-0">
+									<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+									배송 정보
+									</button>
+								</h5>
+								</div>
+
+								<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+								<div class="card-body">
+									<div class="billing-address-form">
+										<div class="form-group">
+											<!-- 이름 -->
+											<label th:for="name" style="font-weight: bold">이름</label>
+											<input id="name" type="text" class="form-control" th:field="*{name}" placeholder="이름을 입력하세요"></br>
+
+											<!-- 전화번호 -->
+											<label th:for="telephone" style="font-weight: bold">전화번호</label>
+											<input id="telephone" type="text" class="form-control" th:field="*{telephone}" placeholder="전화번호를 입력하세요"></br>
+
+											<!-- 우편번호 -->
+											<label th:for="postcode" style="font-weight: bold">우편번호</label>
+											<button type="button" class="btn btn-default" onclick="execPostCode();"><i class="fa fa-search"></i> 우편번호 찾기</button>
+											<input id="postcode" class="form-control" type="text" th:field="*{postcode}" placeholder="우편번호를 입력하세요"></br>
+
+											<!-- 도로명 주소 -->
+											<label th:for="address" style="font-weight: bold">도로명 주소</label>
+											<input id="address" class="form-control" type="text" th:field="*{address}" placeholder="도로명 주소를 입력하세요"></br>
+										</div>
+									</div>
+								</div>
+								</div>
+							</div>
+							</form>
+							<div class="mt-5 text-center">
+								<button onclick="requestPay()" class="btn-lg" style="border: none; color: white; background-color: #F28123FF">
+									주문하기
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end check out section -->
+
+	<!-- footer -->
+	<div th:replace="fragments/footer :: footer"/>
+
+	<script>
+		function requestPay() {
+			const name = document.getElementById('name').value;
+			const telephone = document.getElementById('telephone').value;
+			const postcode = document.getElementById('postcode').value;
+			const address = document.getElementById('address').value;
+
+			if (name == '') {
+				alert('이름을 입력하세요.')
+			} else if (telephone == '') {
+				alert('전화번호를 입력하세요.')
+			} else if (postcode == '') {
+				alert('우편번호를 입력하세요.')
+			} else if (address == '') {
+				alert('도로명 주소를 입력하세요.')
+			} else {
+				iamport(name, telephone, postcode, address);
+			}
+		}
+
+		function iamport(name, telephone, postcode, address){
+			IMP.init("imp33495577");
+			IMP.request_pay({
+				pg : 'html5_inicis',
+				pay_method : 'card',
+				merchant_uid: "order_" + new Date().getTime(), // 상점에서 관리하는 주문 번호
+				name : 'Catch Shop',
+				amount : [[${carts.totalPayPrice}]],
+				buyer_email : '',
+				buyer_name : name,
+				buyer_tel : telephone,
+				buyer_addr : address,
+				buyer_postcode : postcode
+			}, function(rsp) {
+				if (rsp.success) {
+					$.ajax({
+						url: "/orders", // 서버의 결제 정보를 받는 endpoint
+						type: "post",
+						data: {
+							imp_uid: rsp.imp_uid,
+							paid_amount: rsp.paid_amount
+						}
+					}).done(function (data) {
+						console.log(data)
+
+						if(data == "success") {
+							alert("결제가 완료되었습니다.")
+							location.replace("/orders")
+						} else {
+							alert("결제에 실패하였습니다.");
+							location.replace("/carts")
+						}
+					})
+				} else {
+					alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
+					location.replace("/carts")
+				}
+			});
+		}
+	</script>
+	
+	<!-- jquery -->
+	<script src="assets/js/jquery-1.11.3.min.js"></script>
+	<!-- bootstrap -->
+	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+	<!-- count down -->
+	<script src="assets/js/jquery.countdown.js"></script>
+	<!-- isotope -->
+	<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+	<!-- waypoints -->
+	<script src="assets/js/waypoints.js"></script>
+	<!-- owl carousel -->
+	<script src="assets/js/owl.carousel.min.js"></script>
+	<!-- magnific popup -->
+	<script src="assets/js/jquery.magnific-popup.min.js"></script>
+	<!-- mean menu -->
+	<script src="assets/js/jquery.meanmenu.min.js"></script>
+	<!-- sticker js -->
+	<script src="assets/js/sticker.js"></script>
+	<!-- main js -->
+	<script src="assets/js/main.js"></script>
+
+	<!-- 주소록 api -->
+	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+	<script src="/assets/js/order-address.js"></script>
+
+	<!-- iamport.payment.js -->
+	<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
+
+</body>
+</html>

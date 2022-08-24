@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+
+<body>
+<!--PreLoader-->
+<div class="loader">
+    <div class="loader-inner">
+        <div class="circle"></div>
+    </div>
+</div>
+<!--PreLoader Ends-->
+
+<!-- header -->
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<!-- search area -->
+<div class="search-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                <div class="search-bar">
+                    <div class="search-bar-tablecell">
+                        <h3>Search For:</h3>
+                        <input type="text" placeholder="Keywords">
+                        <button type="submit">Search <i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end search arewa -->
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Catch Shop</p>
+                    <h1>상품 수정</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- single product -->
+<div class="single-product mt-150 mb-150">
+    <div class="container">
+        <!-- 상품 작성 폼 시작 -->
+        <form th:object="${productDto}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_method" value="PUT"/>
+            <!-- 상품명 -->
+            <div style="width:300px;margin:0 auto;">
+                <label for="name">상품명</label>
+                <input type="text" th:value="${product.name}" name="name" id="name"
+                       placeholder="상품 이름을 입력하세요.">
+            </div><br>
+
+            <!-- 가격 -->
+            <div style="width:300px;margin:0 auto;">
+                <label for="price">판매가</label>
+                <input type="text" th:value="${product.price}" name="price" id="price"
+                       placeholder="판매가를 입력하세요.">
+            </div><br>
+
+            <!-- 수량 -->
+            <div style="width:300px;margin:0 auto;">
+                <label for="stock">수량</label>
+                <input type="text" th:value="${product.stock}" name="stock" id="stock"
+                       placeholder="수량을 입력하세요.">
+            </div><br>
+
+            <!-- 상품 이미지 -->
+            <div style="width:300px;margin:0 auto;">
+                <label for="img" class="form-label">상품 이미지</label>
+                <input type="file" class="form-control" th:field="*{productImg}"
+                       onchange="imgPreview(img, event.target.files[0])"><br><br>
+                <img id="img" th:src="${product.productImgPath}" style="float:left;">
+            </div><br><br>
+
+            <!-- 상품 수정 버튼 -->
+            <div class="cart-buttons" style="text-align: center;">
+                <div>
+                    <a class="boxed-btn btn-lg black">
+                        <button type="submit"
+                                style="width:100%; border: hidden; text-align: center; background-color: transparent;"
+                                class="btn btn-primary">수정</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+        <!-- 상품 작성 폼 끝 -->
+    </div>
+</div>
+<!-- end single product -->
+
+<!-- footer -->
+<div th:replace="fragments/footer :: footer"/>
+
+<!-- jquery -->
+<script src="/assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="/assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="/assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="/assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="/assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="/assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="/assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="/assets/js/main.js"></script>
+<script>
+    // 첨부 이미지 미리보기 함수
+    function imgPreview(id, file) {
+        id.src=URL.createObjectURL(file);
+    }
+</script>
+</body>
+</html>

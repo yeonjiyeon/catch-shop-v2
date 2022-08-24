@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+
+<body>
+<!--PreLoader-->
+<div class="loader">
+    <div class="loader-inner">
+        <div class="circle"></div>
+    </div>
+</div>
+<!--PreLoader Ends-->
+
+<!-- header -->
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+
+<!-- search area -->
+<div class="search-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                <div class="search-bar">
+                    <div class="search-bar-tablecell">
+                        <h3>Search For:</h3>
+                        <input type="text" placeholder="Keywords">
+                        <button type="submit">Search <i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end search arewa -->
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Catch Shop</p>
+                    <h1>Make a Question</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- single product -->
+<div class="single-product mt-150 mb-150">
+    <div class="container">
+        <!-- Q&A 작성 폼 시작 -->
+        <form th:object="${questionDto}" method="post" enctype="multipart/form-data">
+            <!-- 비밀글 설정 체크박스 -->
+            <label class="check">
+                <input type="checkbox" class="input" th:field="*{secret}">
+                <label class="check" th:for="secret">비밀글</label>
+            </label><br>
+
+            <!-- 비밀글 비밀번호 -->
+            <div style="width:300px;margin:0 auto;">
+                <label for="password">비밀번호</label>
+                <input type="text" th:field="*{password}" id="password"
+                       placeholder="비밀번호를 입력하세요.">
+            </div><br>
+
+
+            <!-- 카테고리 -->
+            <label for="content" class="qna_label">카테고리&nbsp;&nbsp;</label>
+            <select th:field="*{category}" class="form-select">
+                <option th:each="c : ${category}" th:value="${c.name()}"
+                        th:text="${c.description}"></option>
+            </select><br>
+
+            <!-- 내용 -->
+            <div class="form-group">
+                <label for="content" class="qna_label">내용</label>
+                <textarea class="form-control" rows="5" id="content"
+                          name="content" th:field="*{content}"
+                          placeholder="내용을 입력하세요"></textarea>
+                <div id="content_cnt" style="float:right; color:orange;">0 / 200</div>
+            </div><br>
+
+            <!-- 첨부 이미지 -->
+            <div class="col-lg-4 col-md-6 text-center">
+                <label for="img" class="form-label">첨부 이미지</label>
+                <input type="file" class="form-control" th:field="*{questionImg}"
+                       onchange="imgPreview(img, event.target.files[0])"><br><br>
+                <img id="img" src="/assets/img/test_img.png" alt="" style="float:left;">
+            </div><br><br>
+
+            <!-- Q&A 등록 버튼 시작 -->
+            <div class="cart-buttons" style="text-align: center;">
+                <div>
+                    <a class="boxed-btn btn-lg black">
+                        <button type="submit"
+                                style="width:100%; border: hidden; text-align: center; background-color: transparent;"
+                                class="btn btn-primary">등록</button>
+                    </a>
+                </div>
+            </div>
+            <!-- Q&A 등록 버튼 끝 -->
+            <!-- Q&A 작성 폼 끝 -->
+        </form>
+    </div>
+</div>
+<!-- end single product -->
+
+<!-- footer -->
+<div th:replace="fragments/footer :: footer"/>
+
+<!-- jquery -->
+<script src="/assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="/assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="/assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="/assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="/assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="/assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="/assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="/assets/js/main.js"></script>
+<script>
+    $(document).ready(function() {
+        // 글자 수 세기 함수
+        $('#title').on('keyup', function() {
+            $('#title_cnt').html($(this).val().length+" / 10");
+
+            if($(this).val().length > 10) {
+                $(this).val($(this).val().substring(0, 10));
+                $('#title_cnt').html("10 / 10");
+            }
+        });
+
+        $('#content').on('keyup', function() {
+            $('#content_cnt').html($(this).val().length+" / 200");
+
+            if($(this).val().length > 200) {
+                $(this).val($(this).val().substring(0, 200));
+                $('#content_cnt').html("200 / 200");
+            }
+        });
+    });
+
+    // 첨부 이미지 미리보기 함수
+    function imgPreview(id, file) {
+        id.src=URL.createObjectURL(file);
+    }
+</script>
+</body>
+</html>

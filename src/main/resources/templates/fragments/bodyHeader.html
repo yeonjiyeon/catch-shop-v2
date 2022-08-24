@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="header" th:fragment="bodyHeader">
+  <!-- header -->
+  <div class="top-header-area" id="sticker">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 col-sm-12 text-center">
+          <div class="main-menu-wrap">
+            <!-- logo -->
+            <div class="site-logo">
+              <a href="/">
+                <img src="/assets/img/logo.png" alt="">
+              </a>
+            </div>
+            <!-- logo -->
+
+            <!-- 관리자 menu start -->
+            <nav class="main-menu" th:if="${session.role == 'ADMIN'}">
+              <ul>
+                <li><a href="#" th:href="@{/sales}">Sales</a></li>
+                <li><a href="#" th:href="@{/products/admin/{id} (id=${session.id})}">Products</a></li>
+                <li><a href="/categories">Category</a></li>
+                <li><a href="#" th:href="@{/orders/admin}">Orders</a></li>
+                <li><a href="/members">Members</a></li>
+                <li><a href="#" th:href="@{/questions}">Q&A</a></li>
+                <li><a href="#" th:href="@{/reviews/admin}">Review</a></li>
+                <li>
+                  <div class="header-icons">
+                    <a class="shopping-cart" th:if="${session.loginUser == null}" href="/login"><i class="far fa-heart"></i></a>
+                    <a class="shopping-cart" th:if="${session.loginUser != null}" href="#" th:href="@{/users/{id} (id=${session.id})}"><i class="far fa-heart"></i></a>
+                    <a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+                    <a th:if="${session.loginUser == null}" href="/login">Login</a>
+                    <a th:if="${session.loginUser != null}" href="/logout">Logout</a>
+                  </div>
+                </li>
+              </ul>
+            </nav>
+            <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+            <div class="mobile-menu"></div>
+            <!-- 관리자 menu end -->
+
+            <!-- 회원/비회원 menu start -->
+            <nav class="main-menu" th:unless="${session.role == 'ADMIN'}">
+              <ul>
+                <li><a href="/products">전체 상품</a>
+                </li>
+                <li><a th:href="@{/products(productStatus='NEW')}">신상품</a>
+                </li>
+                <li><a th:href="@{/products(productStatus='BEST')}">베스트</a></li>
+                <li><a th:href="@{/products(productStatus='SALE')}">특가/혜택</a>
+                </li>
+                <li>
+                  <div class="header-icons">
+                    <a class="shopping-cart" th:if="${session.loginUser == null}" href="/login"><i class="far fa-heart"></i></a>
+                    <a class="shopping-cart" th:unless="${session.loginUser == null}" href="#" th:href="@{/users/{id} (id=${session.id})}"><i class="far fa-heart"></i></a>
+                    <a class="shopping-cart" href="/carts"><i class="fas fa-shopping-cart"></i></a>
+                    <a class="shopping-cart" href="/orders"><i class="fas fa-receipt"></i></a>
+                    <a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+                    <a th:if="${session.loginUser == null}" href="/login">Login</a>
+                    <a th:unless="${session.loginUser == null}" href="/logout">Logout</a>
+                  </div>
+                </li>
+              </ul>
+            </nav>
+            <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+            <div class="mobile-menu"></div>
+            <!-- 회원/비회원 menu end -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end header -->
+
+
+</div>

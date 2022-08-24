@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+
+<body>
+<!--PreLoader-->
+<div class="loader">
+    <div class="loader-inner">
+        <div class="circle"></div>
+    </div>
+</div>
+<!--PreLoader Ends-->
+
+<!-- header -->
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<!-- search area -->
+<div class="search-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                <div class="search-bar">
+                    <div class="search-bar-tablecell">
+                        <h3>Search For:</h3>
+                        <input type="text" placeholder="Keywords">
+                        <button type="submit">Search <i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end search arewa -->
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Catch Shop</p>
+                    <h1>Q&A</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<div class="single-product mt-150 mb-150">
+    <div class="container">
+        <!-- 전체 qna 조회 시작  -->
+        <div>
+            <table class="cart-table">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>카테고리</th>
+                    <th>작성자 아이디</th>
+                    <th>작성자 이름</th>
+                    <th>내용</th>
+                    <th>답변 여부</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody th:each="question : ${questions}">
+                <tr>
+                    <td th:text="${question.id}" th:onclick="|location.href='@{/questions/{id} (id=${question.id})}'|"></td>
+                    <td th:text="${question.category}"></td>
+                    <td th:text="${question.user.name}"></td>
+                    <td th:text="${question.user.loginId}"></td>
+                    <td th:text="${question.content}"></td>
+                    <td th:text="${question.answered}"></td>
+                    <td>
+                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#newAnswerModal" th:data-id="${question.id}">답변하기</button>
+                    </td>
+                </tr>
+                <tr th:each="answer : ${question.answerList}">
+                    <td th:text="|Re: ${answer.content}|" th:onclick="|location.href='@{/questions/{id} (id=${question.id})}'|"></td>
+                </tr>
+                </tbody>
+            </table><br>
+            <!-- 전체 qna 조회 끝 -->
+        </div>
+    </div>
+</div>
+
+<!-- 신규 답변 등록 Modal 시작 -->
+<div class="modal fade" id="newAnswerModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">답변 등록하기</h4>
+            </div>
+
+            <!-- 답변 작성 폼 시작 -->
+            <form method="post" id="newAnswerForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <textarea class="form-control" id="new-content" th:name="new-content"></textarea>
+                    </div><br><br>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                    <button type="submit" class="btn btn-primary">등록</button>
+                </div>
+            </form>
+            <!-- 답변 작성 폼 끝 -->
+        </div>
+    </div>
+</div>
+<!-- 새로운 답변 등록 Modal 끝 -->
+
+<!-- footer -->
+<div th:replace="fragments/footer :: footer"/>
+
+<!-- jquery -->
+<script src="/assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="/assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="/assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="/assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="/assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="/assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="/assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="/assets/js/main.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#newAnswerModal').on('show.bs.modal', function (e
+        ) {
+            // 게시글 신규 등록 모달 값 초기화
+            $(".modal-body #new-content").val('');
+            $(".modal-content #newAnswerForm").attr("action", "/questions/" + $(e.relatedTarget).data('id') + "/answers");
+
+        });
+    });
+</script>
+</body>
+</html>
